@@ -25,7 +25,9 @@
     <div class="card-bg"></div>
     <div class="card" id="card">
       <span class="category" id="category"></span>
-      <p class="question" id="question"></p>
+      <div class="question-wrapper">
+        <p class="question" id="question"></p>
+      </div>
       <p class="empty-msg" id="empty-msg">Sélectionne au moins une catégorie</p>
       <span class="counter" id="counter"></span>
     </div>
@@ -41,6 +43,15 @@
       "Perso": "cat-perso",
       "Valeurs": "cat-valeurs",
       "Intimité": "cat-intimite",
+    };
+
+    const categoryAccent = {
+      "Découverte": "#6b3fa0",
+      "Léger": "#c0592b",
+      "Rêves": "#2471a3",
+      "Perso": "#1e8449",
+      "Valeurs": "#b9770e",
+      "Intimité": "#a93226",
     };
 
     const categories = Object.keys(categoryClass);
@@ -147,6 +158,7 @@
       if (empty) return;
 
       const c = deck[current];
+      cardEl.style.setProperty("--accent", categoryAccent[c.category]);
       categoryEl.textContent = c.category;
       categoryEl.className = "category " + categoryClass[c.category];
       questionEl.innerHTML = c.question.replace(/ \?/g, "\u00a0?");
