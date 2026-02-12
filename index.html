@@ -7,211 +7,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#f0ece3">
   <title>Cartes de couple</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html {
-      height: 100%;
-      overflow: hidden;
-      overscroll-behavior: none;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f0ece3;
-      padding: 16px;
-      padding-top: env(safe-area-inset-top, 16px);
-      padding-bottom: env(safe-area-inset-bottom, 16px);
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-      touch-action: manipulation;
-    }
-
-    h1 {
-      font-size: 1.2rem;
-      color: #555;
-      margin-bottom: 20px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    .card-container {
-      position: relative;
-      width: min(340px, calc(100vw - 48px));
-      flex: 1 1 auto;
-      max-height: 480px;
-      min-height: 280px;
-    }
-
-    .card-bg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      background: #fff;
-    }
-
-    .card-bg:nth-child(1) {
-      transform: rotate(4deg) translateY(6px);
-      opacity: 0.4;
-    }
-
-    .card-bg:nth-child(2) {
-      transform: rotate(-2deg) translateY(3px);
-      opacity: 0.6;
-    }
-
-    .card {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
-    }
-
-    .card.exit-left {
-      transform: translateX(-120%) rotate(-12deg);
-      opacity: 0;
-    }
-
-    .card.enter-right {
-      transform: translateX(120%) rotate(12deg);
-      opacity: 0;
-    }
-
-    .card.exit-right {
-      transform: translateX(120%) rotate(12deg);
-      opacity: 0;
-    }
-
-    .card.enter-left {
-      transform: translateX(-120%) rotate(-12deg);
-      opacity: 0;
-    }
-
-    .category {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      padding: 6px 16px;
-      border-radius: 100px;
-      margin-bottom: 24px;
-      flex-shrink: 0;
-    }
-
-    .question {
-      font-size: 1.25rem;
-      line-height: 1.6;
-      color: #2c2c2c;
-      font-weight: 500;
-    }
-
-    .counter {
-      margin-top: 24px;
-      font-size: 0.85rem;
-      color: #aaa;
-      flex-shrink: 0;
-    }
-
-    .hint {
-      margin-top: 14px;
-      font-size: 0.8rem;
-      color: #bbb;
-      flex-shrink: 0;
-    }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      flex-shrink: 0;
-      max-width: min(380px, calc(100vw - 32px));
-    }
-
-    .filter-btn {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 100px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: opacity 0.2s, filter 0.2s;
-    }
-
-    .filter-btn.off {
-      opacity: 0.35;
-      filter: grayscale(0.6);
-    }
-
-    .toggle-all-btn {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      padding: 5px 12px;
-      border-radius: 100px;
-      border: 1.5px solid #ccc;
-      background: transparent;
-      color: #888;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .toggle-all-btn:active {
-      border-color: #999;
-      color: #555;
-    }
-
-    .empty-msg {
-      font-size: 1.1rem;
-      color: #999;
-      display: none;
-    }
-
-    /* Small phones (SE, mini) */
-    @media (max-height: 600px) {
-      h1 { font-size: 1rem; margin-bottom: 8px; }
-      .filters { gap: 6px; margin-bottom: 10px; }
-      .filter-btn { font-size: 0.65rem; padding: 5px 10px; }
-      .card { padding: 20px 20px; }
-      .category { margin-bottom: 16px; }
-      .question { font-size: 1.1rem; line-height: 1.5; }
-      .counter { margin-top: 16px; }
-      .hint { margin-top: 10px; }
-    }
-
-    /* Category colors */
-    .cat-decouverte { background: #e8dff0; color: #6b3fa0; }
-    .cat-leger      { background: #fce4d6; color: #c0592b; }
-    .cat-reves      { background: #d6eaf8; color: #2471a3; }
-    .cat-perso      { background: #d5f5e3; color: #1e8449; }
-    .cat-valeurs    { background: #fdebd0; color: #b9770e; }
-    .cat-intimite   { background: #fadbd8; color: #a93226; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Cartes de couple</h1>
+
+  <div class="mode-toggle">
+    <span class="mode-label active" id="mode-label-debut">Début</span>
+    <div class="mode-switch" id="mode-switch"></div>
+    <span class="mode-label" id="mode-label-avance">Avancé</span>
+  </div>
 
   <div class="filters" id="filters"></div>
 
@@ -229,87 +34,6 @@
   <p class="hint">Appuie ou glisse pour la carte suivante</p>
 
   <script>
-    const allCards = [
-      // Découverte
-      { category: "Découverte", question: "C'est quoi ton petit plaisir coupable que personne ne sait ?" },
-      { category: "Découverte", question: "T'étais comment au lycée ?" },
-      { category: "Découverte", question: "Quelle est la chose la plus spontanée que tu aies jamais faite ?" },
-      { category: "Découverte", question: "Si tu pouvais maîtriser un instrument du jour au lendemain, ce serait lequel ?" },
-      { category: "Découverte", question: "C'est quoi ton film ou ta série réconfort quand ça va pas ?" },
-      { category: "Découverte", question: "T'as un talent caché que les gens découvrent toujours avec surprise ?" },
-      { category: "Découverte", question: "C'est quoi le dernier truc qui t'a fait pleurer de rire ?" },
-      { category: "Découverte", question: "Si tu pouvais dîner avec une personne, vivante ou morte, ce serait qui ?" },
-      { category: "Découverte", question: "T'as une phobie un peu bizarre ?" },
-      { category: "Découverte", question: "C'est quoi la chose la plus folle que tu as mangée ?" },
-      { category: "Découverte", question: "Quel est le livre, le film ou la chanson qui t'a le plus marqué(e) ?" },
-      { category: "Découverte", question: "Si tu pouvais revivre une journée de ta vie, ce serait laquelle ?" },
-      // Léger
-      { category: "Léger", question: "Si on partait en week-end demain, tu choisirais quoi : montagne, mer ou ville ?" },
-      { category: "Léger", question: "Quel est le plat que tu pourrais manger tous les jours sans te lasser ?" },
-      { category: "Léger", question: "T'es plutôt lève-tôt ou couche-tard ?" },
-      { category: "Léger", question: "C'est quoi la pire tendance mode que tu as suivie ?" },
-      { category: "Léger", question: "Si tu devais me préparer un date, ça ressemblerait à quoi ?" },
-      { category: "Léger", question: "T'es plutôt sucré ou salé ?" },
-      { category: "Léger", question: "Si on devait adopter un animal ensemble, tu choisirais quoi ?" },
-      { category: "Léger", question: "C'est quoi ta chanson du moment que t'écoutes en boucle ?" },
-      { category: "Léger", question: "Si tu gagnais au loto demain, c'est quoi la première chose que tu achètes ?" },
-      { category: "Léger", question: "T'es plutôt soirée canapé ou sortie entre amis ?" },
-      { category: "Léger", question: "Si on faisait un karaoké là maintenant, tu chanterais quoi ?" },
-      { category: "Léger", question: "C'est quoi ton emoji préféré et pourquoi ?" },
-      // Rêves
-      { category: "Rêves", question: "Si tu pouvais vivre n'importe où dans le monde, tu irais où ?" },
-      { category: "Rêves", question: "C'est quoi un truc sur ta bucket list que tu veux absolument faire ?" },
-      { category: "Rêves", question: "Si l'argent n'existait pas, tu ferais quoi de tes journées ?" },
-      { category: "Rêves", question: "Quel pays tu rêves de visiter et pourquoi ?" },
-      { category: "Rêves", question: "Comment tu imagines ta vie idéale dans 5 ans ?" },
-      { category: "Rêves", question: "Si tu pouvais changer de métier du jour au lendemain, tu ferais quoi ?" },
-      { category: "Rêves", question: "C'est quoi un projet un peu fou que tu aimerais lancer un jour ?" },
-      { category: "Rêves", question: "Si tu pouvais apprendre une langue instantanément, ce serait laquelle ?" },
-      { category: "Rêves", question: "Tu rêves plutôt d'une vie calme à la campagne ou d'une vie animée en ville ?" },
-      { category: "Rêves", question: "C'est quoi une expérience que tu veux absolument vivre au moins une fois ?" },
-      { category: "Rêves", question: "Si tu pouvais te téléporter quelque part là maintenant, tu irais où ?" },
-      { category: "Rêves", question: "Comment tu imagines ta retraite idéale ?" },
-      // Perso
-      { category: "Perso", question: "C'est quoi la chose dont tu es le/la plus fier(e) ?" },
-      { category: "Perso", question: "Qu'est-ce qui te fait rire à coup sûr, même dans un mauvais jour ?" },
-      { category: "Perso", question: "Quelle est la meilleure leçon que tu as apprise en grandissant ?" },
-      { category: "Perso", question: "T'es proche de ta famille ? Raconte-moi un peu." },
-      { category: "Perso", question: "C'est quoi ton plus beau souvenir d'enfance ?" },
-      { category: "Perso", question: "Qui est la personne qui t'a le plus influencé(e) dans ta vie ?" },
-      { category: "Perso", question: "C'est quoi un truc que tu aimerais améliorer chez toi ?" },
-      { category: "Perso", question: "T'as déjà vécu un moment qui a complètement changé ta façon de voir les choses ?" },
-      { category: "Perso", question: "Comment tu te ressources quand t'es épuisé(e) ?" },
-      { category: "Perso", question: "C'est quoi ta plus grande qualité selon tes ami(e)s ?" },
-      { category: "Perso", question: "T'es du genre à garder les choses pour toi ou à tout dire ?" },
-      { category: "Perso", question: "Quel conseil tu donnerais à toi-même il y a 5 ans ?" },
-      // Valeurs
-      { category: "Valeurs", question: "C'est quoi pour toi les ingrédients d'une bonne relation ?" },
-      { category: "Valeurs", question: "Qu'est-ce qui te touche le plus chez quelqu'un ?" },
-      { category: "Valeurs", question: "C'est quoi un truc que tu ne pourrais pas pardonner ?" },
-      { category: "Valeurs", question: "Comment tu gères les désaccords en général ?" },
-      { category: "Valeurs", question: "T'as besoin de beaucoup de temps pour toi ou t'es plutôt fusionnel(le) ?" },
-      { category: "Valeurs", question: "C'est quoi le truc le plus important dans une amitié pour toi ?" },
-      { category: "Valeurs", question: "Tu penses que la jalousie c'est normal ou c'est un red flag ?" },
-      { category: "Valeurs", question: "C'est quoi un sujet sur lequel tu ne feras jamais de compromis ?" },
-      { category: "Valeurs", question: "Comment tu montres à quelqu'un que tu tiens à lui/elle ?" },
-      { category: "Valeurs", question: "T'accorde beaucoup d'importance à l'avis des autres ?" },
-      { category: "Valeurs", question: "C'est quoi pour toi la différence entre aimer et être amoureux ?" },
-      { category: "Valeurs", question: "Tu penses qu'on peut rester ami avec un(e) ex ?" },
-      // Intimité
-      { category: "Intimité", question: "Qu'est-ce qui t'a donné envie de me revoir après notre premier rendez-vous ?" },
-      { category: "Intimité", question: "C'est quoi un petit geste qui te fait fondre ?" },
-      { category: "Intimité", question: "Tu te sens comment quand on est ensemble ?" },
-      { category: "Intimité", question: "Quelle est la première chose que tu as remarquée chez moi ?" },
-      { category: "Intimité", question: "C'est quoi ton love language ?" },
-      { category: "Intimité", question: "T'as pensé quoi de moi la toute première fois qu'on s'est vus ?" },
-      { category: "Intimité", question: "C'est quoi un truc chez moi qui te plaît et que je soupçonne pas ?" },
-      { category: "Intimité", question: "Tu préfères qu'on se dise les choses tout de suite ou qu'on prenne du recul d'abord ?" },
-      { category: "Intimité", question: "C'est quoi le moment où tu t'es dit que ça devenait sérieux entre nous ?" },
-      { category: "Intimité", question: "Qu'est-ce que tu aimes le plus dans notre façon de communiquer ?" },
-      { category: "Intimité", question: "T'as une attente pour nous deux que tu n'as pas encore osé exprimer ?" },
-      { category: "Intimité", question: "C'est quoi le meilleur moment qu'on a passé ensemble jusqu'ici ?" },
-    ];
-
     const categoryClass = {
       "Découverte": "cat-decouverte",
       "Léger": "cat-leger",
@@ -321,6 +45,8 @@
 
     const categories = Object.keys(categoryClass);
     const activeCategories = new Set(categories);
+    let activeLevel = "debut";
+    let allCards = [];
     let deck = [];
     let current = 0;
     let animating = false;
@@ -331,6 +57,33 @@
     const questionEl = document.getElementById("question");
     const counterEl = document.getElementById("counter");
     const emptyEl = document.getElementById("empty-msg");
+    const modeSwitchEl = document.getElementById("mode-switch");
+    const modeLabelDebut = document.getElementById("mode-label-debut");
+    const modeLabelAvance = document.getElementById("mode-label-avance");
+
+    // Load questions then init
+    fetch("questions.json")
+      .then(r => r.json())
+      .then(data => {
+        allCards = data;
+        buildDeck();
+      });
+
+    // Mode toggle
+    modeSwitchEl.addEventListener("click", () => {
+      if (activeLevel === "debut") {
+        activeLevel = "avance";
+        modeSwitchEl.classList.add("advanced");
+        modeLabelDebut.classList.remove("active");
+        modeLabelAvance.classList.add("active");
+      } else {
+        activeLevel = "debut";
+        modeSwitchEl.classList.remove("advanced");
+        modeLabelAvance.classList.remove("active");
+        modeLabelDebut.classList.add("active");
+      }
+      buildDeck();
+    });
 
     // Build filter buttons
     const filterBtns = [];
@@ -380,7 +133,7 @@
     }
 
     function buildDeck() {
-      deck = shuffle(allCards.filter(c => activeCategories.has(c.category)));
+      deck = shuffle(allCards.filter(c => activeCategories.has(c.category) && c.level === activeLevel));
       current = 0;
       renderCard();
     }
@@ -459,8 +212,6 @@
       if (diff > 40) nextCard();
       if (diff < -40) prevCard();
     });
-
-    buildDeck();
   </script>
 </body>
 </html>
