@@ -305,6 +305,124 @@ h1 {
   .hint { margin-top: 10px; }
 }
 
+/* Dark mode toggle button */
+.dark-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.dark-toggle:active {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.dark-toggle-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Dark mode */
+body.dark {
+  background: #1a1a2e;
+}
+
+body.dark h1 {
+  color: #aaa;
+}
+
+body.dark .card-bg {
+  background: #2a2a40;
+}
+
+body.dark .card {
+  background: linear-gradient(165deg, #2a2a40 0%, #252538 100%);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .card:active {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .card-bg:nth-child(1) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark .card-bg:nth-child(2) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark .question {
+  color: #e8e8e8;
+}
+
+body.dark .counter {
+  color: #666;
+}
+
+body.dark .hint {
+  color: #555;
+}
+
+body.dark .empty-msg {
+  color: #666;
+}
+
+body.dark .mode-label {
+  color: #666;
+}
+
+body.dark .mode-label.active {
+  color: #ccc;
+}
+
+body.dark .mode-switch {
+  background: #444;
+}
+
+body.dark .mode-switch.advanced {
+  background: #7b5fa0;
+}
+
+body.dark .toggle-all-btn {
+  border-color: #555;
+  color: #888;
+}
+
+body.dark .toggle-all-btn:active {
+  border-color: #777;
+  color: #bbb;
+}
+
+body.dark .dark-toggle {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .dark-toggle:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.dark .cat-decouverte { background: #3a2a50; color: #c4a0f0; }
+body.dark .cat-leger      { background: #4a2a1a; color: #f0a878; }
+body.dark .cat-reves      { background: #1a3048; color: #78b8e8; }
+body.dark .cat-perso      { background: #1a3828; color: #78d0a0; }
+body.dark .cat-valeurs    { background: #3a2e10; color: #e8c870; }
+body.dark .cat-intimite   { background: #3a1a18; color: #e88880; }
+
 /* Category colors */
 .cat-decouverte { background: #e8dff0; color: #6b3fa0; }
 .cat-leger      { background: #fce4d6; color: #c0592b; }
