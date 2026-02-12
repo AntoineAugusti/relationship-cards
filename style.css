@@ -320,7 +320,8 @@ h1 {
   align-items: center;
   justify-content: center;
   transition: background 0.25s;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding: 0;
+  line-height: 1;
 }
 
 .dark-toggle:active {
@@ -330,6 +331,9 @@ h1 {
 .dark-toggle-icon {
   font-size: 1.1rem;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Dark mode */
