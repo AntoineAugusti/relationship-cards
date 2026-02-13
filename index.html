@@ -11,15 +11,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Cartes de couple</h1>
+  <div class="lang-selector" id="lang-selector">
+    <button class="lang-btn active" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="pt">PT</button>
+  </div>
 
   <div class="mode-toggle">
     <span class="mode-label active" id="mode-label-debut">Début</span>
     <div class="mode-switch" id="mode-switch"></div>
     <span class="mode-label" id="mode-label-avance">Avancé</span>
   </div>
-
-  <div class="filters" id="filters"></div>
 
   <div class="card-container">
     <div class="card-bg"></div>
@@ -34,13 +36,83 @@
     </div>
   </div>
 
-  <p class="hint">Appuie ou glisse pour la carte suivante</p>
+  <div class="filters" id="filters"></div>
+
+  <p class="hint" id="hint">Appuie ou glisse pour la carte suivante</p>
 
   <button class="dark-toggle" id="dark-toggle" aria-label="Basculer le mode sombre">
     <span class="dark-toggle-icon" id="dark-toggle-icon">☀️</span>
   </button>
 
   <script>
+    // i18n translations
+    const i18n = {
+      fr: {
+        pageTitle: "Cartes de couple",
+        debut: "Début",
+        avance: "Avancé",
+        none: "Aucune",
+        all: "Toutes",
+        empty: "Sélectionne au moins une catégorie",
+        hint: "Appuie ou glisse pour la carte suivante",
+        darkToggle: "Basculer le mode sombre",
+        categories: {
+          "Découverte": "Découverte",
+          "Léger": "Léger",
+          "Rêves": "Rêves",
+          "Perso": "Perso",
+          "Valeurs": "Valeurs",
+          "Intimité": "Intimité"
+        }
+      },
+      en: {
+        pageTitle: "Couple Cards",
+        debut: "Starter",
+        avance: "Advanced",
+        none: "None",
+        all: "All",
+        empty: "Select at least one category",
+        hint: "Tap or swipe for the next card",
+        darkToggle: "Toggle dark mode",
+        categories: {
+          "Découverte": "Discovery",
+          "Léger": "Light",
+          "Rêves": "Dreams",
+          "Perso": "Personal",
+          "Valeurs": "Values",
+          "Intimité": "Intimacy"
+        }
+      },
+      pt: {
+        pageTitle: "Cartas de casal",
+        debut: "Iniciante",
+        avance: "Avançado",
+        none: "Nenhuma",
+        all: "Todas",
+        empty: "Selecione pelo menos uma categoria",
+        hint: "Toque ou deslize para a próxima carta",
+        darkToggle: "Alternar modo escuro",
+        categories: {
+          "Découverte": "Descoberta",
+          "Léger": "Leve",
+          "Rêves": "Sonhos",
+          "Perso": "Pessoal",
+          "Valeurs": "Valores",
+          "Intimité": "Intimidade"
+        }
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "fr";
+
+    function t(key) {
+      return i18n[currentLang][key];
+    }
+
+    function tCat(cat) {
+      return i18n[currentLang].categories[cat];
+    }
+
     const categoryClass = {
       "Découverte": "cat-decouverte",
       "Léger": "cat-leger",
@@ -82,9 +154,29 @@
     const questionEl = document.getElementById("question");
     const counterEl = document.getElementById("counter");
     const emptyEl = document.getElementById("empty-msg");
+    const hintEl = document.getElementById("hint");
     const modeSwitchEl = document.getElementById("mode-switch");
     const modeLabelDebut = document.getElementById("mode-label-debut");
     const modeLabelAvance = document.getElementById("mode-label-avance");
+
+    // Language selector
+    const langBtns = document.querySelectorAll(".lang-btn");
+    langBtns.forEach(btn => {
+      if (btn.dataset.lang === currentLang) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+      btn.addEventListener("click", () => {
+        currentLang = btn.dataset.lang;
+        localStorage.setItem("lang", currentLang);
+        langBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.documentElement.lang = currentLang;
+        updateUI();
+        renderCard();
+      });
+    });
 
     // Load questions then init
     fetch("questions.json")
@@ -115,7 +207,8 @@
     categories.forEach(cat => {
       const btn = document.createElement("button");
       btn.className = "filter-btn " + categoryClass[cat];
-      btn.textContent = cat;
+      btn.textContent = tCat(cat);
+      btn.dataset.cat = cat;
       btn.addEventListener("click", () => {
         if (activeCategories.has(cat)) {
           activeCategories.delete(cat);
@@ -133,21 +226,39 @@
     // Toggle all button
     const toggleBtn = document.createElement("button");
     toggleBtn.className = "toggle-all-btn";
-    toggleBtn.textContent = "Aucune";
+    toggleBtn.textContent = t("none");
     toggleBtn.addEventListener("click", () => {
       const allActive = activeCategories.size === categories.length;
       if (allActive) {
         activeCategories.clear();
         filterBtns.forEach(b => b.classList.add("off"));
-        toggleBtn.textContent = "Toutes";
+        toggleBtn.textContent = t("all");
       } else {
         categories.forEach(c => activeCategories.add(c));
         filterBtns.forEach(b => b.classList.remove("off"));
-        toggleBtn.textContent = "Aucune";
+        toggleBtn.textContent = t("none");
       }
       buildDeck();
     });
     filtersEl.appendChild(toggleBtn);
+
+    function updateUI() {
+      document.title = t("pageTitle");
+      modeLabelDebut.textContent = t("debut");
+      modeLabelAvance.textContent = t("avance");
+      emptyEl.textContent = t("empty");
+      hintEl.textContent = t("hint");
+      document.getElementById("dark-toggle").setAttribute("aria-label", t("darkToggle"));
+
+      // Update filter buttons text
+      filterBtns.forEach(btn => {
+        btn.textContent = tCat(btn.dataset.cat);
+      });
+
+      // Update toggle all button
+      const allActive = activeCategories.size === categories.length;
+      toggleBtn.textContent = allActive ? t("none") : t("all");
+    }
 
     function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
@@ -174,9 +285,10 @@
       const c = deck[current];
       const isDark = document.body.classList.contains("dark");
       cardEl.style.setProperty("--accent", (isDark ? categoryAccentDark : categoryAccent)[c.category]);
-      categoryEl.textContent = c.category;
+      categoryEl.textContent = tCat(c.category);
       categoryEl.className = "category " + categoryClass[c.category];
-      questionEl.innerHTML = c.question.replace(/ \?/g, "\u00a0?");
+      const questionText = c.question[currentLang] || c.question.fr;
+      questionEl.innerHTML = questionText.replace(/ \?/g, "\u00a0?");
       counterEl.textContent = (current + 1) + " / " + deck.length;
     }
 
@@ -261,6 +373,9 @@
       if (diff > 40) nextCard();
       if (diff < -40) prevCard();
     });
+
+    // Set initial lang attribute
+    document.documentElement.lang = currentLang;
   </script>
 </body>
 </html>
